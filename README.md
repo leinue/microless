@@ -12,7 +12,7 @@
 
 1. Using docker for deploying micro service
 2. Transferring the data between the services via JSON strings
-3. Single serivice has it's own database
+3. Every single serivice has it's own database
 4. API Gateway serve as the controlling unit, which controls the whole system.You can do some universal works like auth or log.
 
 ## Installation

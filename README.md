@@ -27,7 +27,7 @@ $ npm install micro.js
 
 ## Getting started
 
-### Register Service
+### Register service
 
 ``` javascript
 
@@ -41,10 +41,11 @@ var exampleService = myMicroService.registerService({
 });
 
 ```
+This will run the service in a docker named 'micro_example'
 
-### Register Database
+### Register database
 
-``` javasript
+``` javascript
 
 var exampleDB = exampleService.registerDatabase({
   name: 'example-db',
@@ -56,3 +57,4 @@ var exampleDB = exampleService.registerDatabase({
 });
 
 ```
+this will run the database service in a docker named 'micro_example_db_example-db'

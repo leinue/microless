@@ -95,4 +95,4 @@ myMicroService.run(3000);
 
 ```
 
-Then the project will run in port 3000, and every stopped dockers will be started when the project is running.
+Then the project will run in port 3000, and every stopped docker will be started when the project is running.

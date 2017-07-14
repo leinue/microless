@@ -86,3 +86,13 @@ exampleService.reStart();
 ```
 
 database service has the same methods.
+
+### Run the project
+
+``` javascript
+
+myMicroService.run(3000);
+
+```
+
+Then the project will run in port 3000, and every stopped dockers will be started when the project is running.

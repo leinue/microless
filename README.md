@@ -41,7 +41,7 @@ var exampleService = myMicroService.registerService({
 });
 
 ```
-This will run the service in a docker named 'micro_example'
+This will run the service in a docker named ```'micro_example'```.
 
 ### Register database
 
@@ -57,4 +57,32 @@ var exampleDB = exampleService.registerDatabase({
 });
 
 ```
-this will run the database service in a docker named 'micro_example_db_example-db'
+this will run the database service in a docker named ```'micro_example_db_example-db'```.
+
+### Manage micro service
+
+#### Start a service
+
+``` javascript
+
+exampleService.start();
+
+```
+
+#### Stop a service
+
+``` javascript
+
+exampleService.stop();
+
+```
+
+#### Restart a service
+
+``` javascript
+
+exampleService.reStart();
+
+```
+
+database service has the same methods.

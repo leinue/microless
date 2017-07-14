@@ -27,4 +27,32 @@ $ npm install micro.js
 
 ## Getting started
 
-### 
+### Register Service
+
+``` javascript
+
+var myMicroService = new Micro();
+
+var exampleService = myMicroService.registerService({
+    name: 'example',
+    function: () => {
+        console.log('service example');
+    }
+});
+
+```
+
+### Register Database
+
+``` javasript
+
+var exampleDB = exampleService.registerDatabase({
+  name: 'example-db',
+  type: 'mongodb',
+  connection: {
+    username: '',
+    password: ''
+  }
+});
+
+```

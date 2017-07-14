@@ -57,7 +57,7 @@ var exampleDB = exampleService.registerDatabase({
 });
 
 ```
-this will run the database service in a docker named ```'micro_example_db_example-db'```.
+This will run the database service in a docker named ```'micro_example_db_example-db'```.When a database service registered, its logic service will be notified, and you can use the database instance in its callback function.
 
 ### Manage micro service
 

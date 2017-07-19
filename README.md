@@ -1,8 +1,6 @@
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/logo.png?raw=true)
 
-## Introduction
-
-> micro.js is a serverless & microservice framework using docker for Function as a Service(FaaS), aiming at helping developers and businesses to build serverless applications more faster and easily.
+Microservice framework for node.js to make microservice web applications and APIs more enjoyable to write. Micro is based on koa.js, allowing you to use all the features that koa has.
 
 ## Features
 

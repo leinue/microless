@@ -6,7 +6,7 @@
 
 ## Features
 
-> Make serverless reachable 
+> Make microservice reachable 
 
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/Architecture.png?raw=true)
 

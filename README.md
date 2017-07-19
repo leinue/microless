@@ -19,6 +19,8 @@ Microservice framework for node.js to make microservice web applications and API
 
 ## Installation
 
+Micro requires node v7.6.0 or higher for ES2015 and async function support, also requires docker.
+
 ```
 $ npm install micro.js
 ```

@@ -1,6 +1,6 @@
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/logo.png?raw=true)
 
-Microservice framework for node.js to make microservice web applications and APIs more enjoyable to write. Micro is based on koa.js, allowing you to use all the features that koa has.
+Microservice framework for node.js to make container-based microservice web applications and APIs more enjoyable to write. Micro is based on koa.js, allowing you to use all the features that koa has.
 
 ## Features
 

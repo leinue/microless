@@ -1,9 +1,26 @@
 const Koa = require('koa');
 const app = new Koa();
 
-// response
-app.use(ctx => {
-  ctx.body = 'Hello Koa';
-});
+var Micro = function() {}
 
-app.listen(3000);
+Micro.prototype = {
+
+	run: function(params, cb) {
+
+		app.use(ctx => {
+		  ctx.body = 'Hello Koa';
+		});
+
+		app.listen(params.port, cb);
+	},
+
+	registerService: function(name, cb) {
+
+	},
+
+	registerDatabase: function(serviceName, dbName, cb) {
+
+	}
+}
+
+module.exports = Micro;

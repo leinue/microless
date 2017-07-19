@@ -1,4 +1,4 @@
-# micro.js
+![arch](https://github.com/Authing/micro.js/blob/master/assets/logo.png?raw=true)
 
 ## Introduction
 

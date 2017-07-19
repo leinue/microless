@@ -1,0 +1,31 @@
+{
+  "name": "micro",
+  "version": "1.0.0",
+  "description": "Serverless & Microservice framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Authing/micro.js.git"
+  },
+  "keywords": [
+    "docker",
+    "microservice",
+    "javascript",
+    "nodejs",
+    "serverless",
+    "devops",
+    "koajs"
+  ],
+  "author": "authing",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Authing/micro.js/issues"
+  },
+  "homepage": "https://github.com/Authing/micro.js#readme",
+  "dependencies": {
+    "koa": "^2.3.0"
+  }
+}

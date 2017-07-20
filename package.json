@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Authing/micro.js#readme",
   "dependencies": {
+    "dockerode": "^2.5.0",
     "koa": "^2.3.0"
   }
 }

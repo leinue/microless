@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const app = new Koa();
+const Docker = require('dockerode');
 
 var Micro = function() {
 	this.serviceList = [];
@@ -17,6 +18,16 @@ Micro.prototype = {
 		});
 
 		app.listen(params.port, cb);
+
+		this.initDocker();
+	},
+
+	initDocker: function() {
+		var docker = new Docker();
+		console.log(docker);
+		docker.listContainers(function(err, containers) {
+			console.log(containers);
+		});
 	},
 
 	registerService: function(params, cb) {

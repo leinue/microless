@@ -26,10 +26,16 @@ var micro = new Micro({
 		onError: function(ctx, next, error) {
 			ctx.body = error;
 		}
-	}
-});
+	},
 
-// micro.registerService();
+	services: [{
+		name: 'test',
+		port: 4000
+	}, {
+		name: 'tests',
+		port: 4001
+	}]
+});
 
 micro.run({
 	port: 3001

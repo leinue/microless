@@ -22,7 +22,7 @@ Microservice framework for node.js to make container-based microservice web appl
 Micro requires node v7.6.0 or higher for ES2015 and async function support, also requires docker.
 
 ```
-$ npm install micro.js
+$ npm install microless --save
 ```
 
 ## Getting started
@@ -114,10 +114,10 @@ database service has the same methods.
 
 ``` javascript
 
-myMicroService.run(3000);
+myMicroService.run(3001);
 
 ```
 
-Then the project will run in port 3000, and every stopped docker will be started when the project is running.
+Then the project will run in port 3001, and every stopped docker will be started when the project is running.
 
 ![run](https://github.com/Authing/micro.js/blob/master/assets/run.png?raw=true)

@@ -30,7 +30,8 @@ var micro = new Micro({
 
 	services: [{
 		name: 'test',
-		port: 4000
+		port: 4000,
+		src: './'
 	}, {
 		name: 'tests',
 		port: 4001

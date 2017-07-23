@@ -41,12 +41,23 @@ const routers = {
 }
 
 var opts = {
-  router: {
-    configs: routers, //router configs
-    routeNotFound: function() {}, //called when router can't be found
-    methodNotSupported: function() {} //called when method can't be supported
-    onError: function() {} //called when http error happened
-  }
+
+  services: [{
+    name: 'test', //docker name
+    port: 9999, //docker port
+    host: 'http://localhost', //docker host
+    src: './', //docker volume
+    router: {
+      configs: routers, //router configs
+      routeNotFound: function() {}, //called when router can't be found
+      methodNotSupported: function() {} //called when method can't be supported
+      onError: function() {} //called when http error happened
+    }
+  }, {
+    name: 'tests',
+    port: 4001
+  }]
+
 }
 
 var myMicroService = new Micro(opts);

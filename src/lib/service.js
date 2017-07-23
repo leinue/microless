@@ -44,7 +44,7 @@ Service.prototype = {
 					throw '[microless error]: service port [' + service.port + '] duplicated';
 				}else {
 
-					this.registerDocker(service, i);
+					// this.registerDocker(service, i);
 
 					this.serviceList[i].registered = false;
 				}

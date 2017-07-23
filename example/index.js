@@ -21,21 +21,23 @@ const routers = {
 }
 
 var micro = new Micro({
-	router: {
-		configs: routers,
-		onError: function(ctx, next, error) {
-			ctx.body = error;
-		}
-	},
 
 	services: [{
 		name: 'test',
-		port: 4000,
-		src: './'
+		port: 9999,
+		host: 'http://gospely.com',
+		src: './',
+		router: {
+			configs: routers,
+			onError: function(ctx, next, error) {
+				ctx.body = error;
+			}
+		}
 	}, {
 		name: 'tests',
 		port: 4001
 	}]
+
 });
 
 micro.run({

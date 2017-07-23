@@ -5,11 +5,10 @@ const Route = require('../router.js');
 const koaBody = require('koa-body');
 const Service = require('./service.js');
 
-var Micro = function(opts) {
-	this.serviceList = opts.services || [];
+var Micro = function(servicesConfig) {
 	this.databaseList = [];
 
-	this.opts = opts;
+	this.servicesConfig = servicesConfig.services || [];
 
 	this.initKoa();
 	this.initService();
@@ -24,15 +23,25 @@ Micro.prototype = {
 
 		app.use(koaBody());
 
-		Route({
-			router: {
-				instance: router,
-				configs: this.opts.router.configs || {},
-				routeNotFound: this.opts.router.routeNotFound,
-				methodNotSupported: this.opts.router.methodNotSupported,
-				onError: this.opts.router.onError
+		for (var i = 0; i < this.servicesConfig.length; i++) {
+			var serviceConfig = this.servicesConfig[i];
+
+			if(!serviceConfig.router) {
+				continue;
 			}
-		});
+
+			Route({
+				router: {
+					instance: router,
+					configs: serviceConfig.router.configs || {},
+					routeNotFound: serviceConfig.router.routeNotFound,
+					methodNotSupported: serviceConfig.router.methodNotSupported,
+					onError: serviceConfig.router.onError
+				},
+				service: serviceConfig
+			});
+
+		};
 
 		app.use(router.routes());
 
@@ -42,7 +51,7 @@ Micro.prototype = {
 	},
 
 	initService: function() {
-		this.service = new Service(this.serviceList);
+		this.service = new Service(this.servicesConfig);
 	},
 
 	run: function(opts, cb) {

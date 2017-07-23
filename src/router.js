@@ -1,14 +1,12 @@
 const dockerReq = require('request');
 
-const handleDockerRequest = function() {
+const handleDockerRequest = function(ctx, next, service) {
 	return new Promise((resolve, reject) => {
 
 		var options = {
-		  url: 'http://api.gospely.com/',
-		  method: 'get',
-		  headers: {
-		    'User-Agent': 'request'
-		  }
+		  url: service.host + ':' + service.port || 'http://localhost:' + service.port,
+		  method: ctx.method,
+		  headers: ctx.header
 		};
 
 		function callback(error, response, body) {
@@ -31,7 +29,9 @@ var route = function (opts) {
 
 	var router = opts.router.instance,
 
-		routerConfigs = opts.router.configs;
+		routerConfigs = opts.router.configs,
+
+		service = opts.service;
 
 	const connectDB = () => {
 		var db = mongoose.connection;
@@ -58,7 +58,7 @@ var route = function (opts) {
 				generateRoutes(request.subRoute);
 			}
 			router[request.method](key, (ctx, next) => {
-				return handleDockerRequest.call(ctx, ctx, next).then((body) => {
+				return handleDockerRequest.call(ctx, ctx, next, service).then((body) => {
 					if(this.currentRequestConfig.afterRoute) {
 						this.currentRequestConfig.afterRoute.call(ctx, ctx, next, {
 							body: body

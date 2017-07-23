@@ -16,7 +16,7 @@ const routers = {
 		},
 		name: 'shit',
 		alias: 'shit',
-		method: 'get'	
+		method: 'get'
 	}
 }
 

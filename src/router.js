@@ -1,3 +1,31 @@
+const dockerReq = require('request');
+
+const handleDockerRequest = function() {
+	return new Promise((resolve, reject) => {
+
+		var options = {
+		  url: 'http://api.gospely.com/',
+		  method: 'get',
+		  headers: {
+		    'User-Agent': 'request'
+		  }
+		};
+
+		function callback(error, response, body) {
+
+			if(error) {
+				reject(error);
+			}
+
+		  	if (!error && response.statusCode == 200) {
+		    	// var info = JSON.parse(body);
+		    	resolve(body);
+		  	}
+		}
+
+		dockerReq(options, callback);
+	});
+}
 
 var route = function (opts) {
 
@@ -30,7 +58,19 @@ var route = function (opts) {
 				generateRoutes(request.subRoute);
 			}
 			router[request.method](key, (ctx, next) => {
-				this.currentRequestConfig.controller.call(ctx, ctx, next);
+				return handleDockerRequest.call(ctx, ctx, next).then((body) => {
+					this.currentRequestConfig.controller.call(ctx, ctx, next, {
+						body: body
+					});					
+				}).catch((error) => {
+					if(opts.router.onError) {
+						opts.router.onError.call(ctx, ctx, next, error);
+					}else {
+						this.currentRequestConfig.controller.call(ctx, ctx, next, {
+							error: error
+						});
+					}
+				});
 			});
 		};	
 	}
@@ -74,13 +114,15 @@ var route = function (opts) {
 
 				this.currentRequestConfig = getRouterFromRouterConfigs(routerConfigs, path);
 
-				if(ctx.method != this.currentRequestConfig.method) {
+				if(ctx.method.toLowerCase() != this.currentRequestConfig.method.toLowerCase()) {
 					if(opts.router.methodNotSupported) {
 						opts.router.methodNotSupported.call(this, ctx, next)
 					}else {
 						ctx.body = '[micro error]: ' + ctx.method + ' is not supported for this method';					
 					}
 				}
+
+				ctx.body = '[micro error]: It seems that [' + ctx.originalUrl + '] is not returning data.You can use `ctx.body = ""` to return data';
 
 				return next();
 			}

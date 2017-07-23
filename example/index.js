@@ -2,8 +2,8 @@ const Micro = require('../src');
 
 const routers = {
 	'/': {
-		controller: function(ctx, next) {
-			ctx.body = 'index api 0.1';
+		controller: function(ctx, next, response) {
+			ctx.body = response.body;
 		},
 		name: 'index',
 		alias: 'index',
@@ -23,8 +23,13 @@ const routers = {
 var micro = new Micro({
 	router: {
 		configs: routers,
+		onError: function(ctx, next, error) {
+			ctx.body = error;
+		}
 	}
 });
+
+// micro.registerService();
 
 micro.run({
 	port: 3001

@@ -1,6 +1,6 @@
 {
-  "name": "micro",
-  "version": "1.0.0",
+  "name": "microless",
+  "version": "0.0.1",
   "description": "Serverless & Microservice framework",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Authing/micro.js.git"
+    "url": "git+https://github.com/Authing/microless.git"
   },
   "keywords": [
     "docker",
@@ -22,14 +22,15 @@
   "author": "authing",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Authing/micro.js/issues"
+    "url": "https://github.com/Authing/microless/issues"
   },
-  "homepage": "https://github.com/Authing/micro.js#readme",
+  "homepage": "https://github.com/Authing/microless#readme",
   "dependencies": {
     "dockerode": "^2.5.0",
     "koa": "^2.3.0",
     "koa-body": "^2.3.0",
     "koa-router": "^7.2.1",
-    "koa-send": "^4.1.0"
+    "koa-send": "^4.1.0",
+    "request": "^2.81.0"
   }
 }

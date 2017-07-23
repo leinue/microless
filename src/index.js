@@ -1,39 +1,50 @@
 const Koa = require('koa');
-const app = new Koa();
+const Router = require('koa-router');
+const Route = require('./router.js');
+
+const koaBody = require('koa-body');
 const Docker = require('dockerode');
 
 var Micro = function() {
 	this.serviceList = [];
 	this.databaseList = [];
+
+	this.initKoa();
+
+	this.initDocker();
 }
 
 Micro.prototype = {
 
-	run: function(params, cb) {
+	initKoa: function() {
 
-		params.port = params.port || 3000;
+		const app = new Koa();
+		const router = new Router();
+		
+		app.use(koaBody());
 
-		app.use(ctx => {
-		  ctx.body = 'Hello Koa';
-		});
+		Route(router, undefined);
 
-		app.listen(params.port, cb);
+		app.use(router.routes());
 
-		this.initDocker();
+		this.router = router;
+		this.app = app;
+		this.koaBody = koaBody;
 	},
 
 	initDocker: function() {
-		var docker = new Docker();
-		console.log(docker);
-		docker.listContainers(function(err, containers) {
+		this.docker = new Docker();
+		this.docker.listContainers(function(err, containers) {
 			console.log(containers);
 		});
 	},
 
+	run: function(params, cb) {
+		params.port = params.port || 3000;
+		this.app.listen(params.port, cb);
+	},
+
 	registerService: function(params, cb) {
-
-
-
 		this.serviceList.push({
 			name: params.name
 		});

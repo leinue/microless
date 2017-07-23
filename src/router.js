@@ -27,14 +27,12 @@ module.exports = function (opts) {
 		connectDB();
 	}
 
-	const notFound = (ctx, request) => {
-		ctx.body = request.path + ' not found';
-	}
-
 	router.all('*', function (ctx, next) {
 		this.router = router;
 
 		var routerExistsFlag = -1;
+
+		console.log('[' + Date() + ']: ' + ctx.method + ' request for: ' + ctx.originalUrl);
 
 		for (var j = 0; j < this.router.stack.length; j++) {
 			var routerStack = this.router.stack[j];
@@ -47,10 +45,9 @@ module.exports = function (opts) {
 
 			if(isHitRoute) {
 				routerExistsFlag ++;
-				console.log('[' + Date() + ']: ' + request.method + ' request for: ' + ctx.originalUrl);						
 				var path = routerStack.path;
-				routerConfigs[path].controller.call(this, ctx, next);
-				break;
+				this.currentRequestConfig = routerConfigs[path];
+				return next();
 			}
 		};
 
@@ -64,4 +61,12 @@ module.exports = function (opts) {
 
 		return next();
 	});
+
+	for (var key in routerConfigs) {
+		var request = routerConfigs[key];
+		router[request.method](key, (ctx, next) => {
+			this.currentRequestConfig.controller.call(this, ctx, next);
+		});
+	};
+
 }

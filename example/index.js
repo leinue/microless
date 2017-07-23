@@ -25,7 +25,6 @@ const routers = {
 	'/shit/:id': {
 		path: '/shit/:id',
 		controller: function(ctx, next) {
-			console.log('shit');
 			ctx.body = 'shit api 0.1';
 		},
 		name: 'shit',

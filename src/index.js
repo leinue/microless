@@ -27,9 +27,9 @@ Micro.prototype = {
 		Route({
 			router: {
 				instance: router,
-				configs: this.opts.routers || [],
-				routeNotFound: this.opts.routeNotFound,
-				methodNotSupported: this.opts.methodNotSupported
+				configs: this.opts.router.configs || {},
+				routeNotFound: this.opts.router.routeNotFound,
+				methodNotSupported: this.opts.router.methodNotSupported
 			}
 		});
 

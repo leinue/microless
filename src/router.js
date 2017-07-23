@@ -30,7 +30,7 @@ var route = function (opts) {
 				generateRoutes(request.subRoute);
 			}
 			router[request.method](key, (ctx, next) => {
-				this.currentRequestConfig.controller.call(this, ctx, next);
+				this.currentRequestConfig.controller.call(ctx, ctx, next);
 			});
 		};	
 	}

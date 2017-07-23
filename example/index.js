@@ -12,7 +12,7 @@ const routers = {
 
 	'/shit/:id': {
 		controller: function(ctx, next) {
-			ctx.body = 'shit api 0.1';
+			ctx.body = 'shit api 0.1, params=' + JSON.stringify(this.params);
 		},
 		name: 'shit',
 		alias: 'shit',
@@ -21,7 +21,9 @@ const routers = {
 }
 
 var micro = new Micro({
-	routers: routers
+	router: {
+		configs: routers,
+	}
 });
 
 micro.run({

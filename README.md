@@ -27,11 +27,34 @@ $ npm install micro.js
 
 ## Getting started
 
-### Register service
+### init
 
 ``` javascript
 
-var myMicroService = new Micro();
+const routers = {
+  '/': {
+    controller: function(ctx, next) {
+      ctx.body = 'index api 0.1';
+    },
+    method: 'get'
+  }
+}
+
+var opts = {
+  router: {
+    configs: routers, //router configs
+    routeNotFound: function() {}, //called when router can't be found
+    methodNotSupported: function() {} //called when method can't be supported
+  }
+}
+
+var myMicroService = new Micro(opts);
+
+```
+
+### Register service
+
+``` javascript
 
 var exampleService = myMicroService.registerService({
     name: 'example',

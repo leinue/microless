@@ -27,7 +27,8 @@ Micro.prototype = {
 		Route({
 			router: {
 				instance: router,
-				configs: this.opts.routers || []
+				configs: this.opts.routers || [],
+				routeNotFound: this.opts.routeNotFound
 			}
 		});
 
@@ -41,7 +42,7 @@ Micro.prototype = {
 	initDocker: function() {
 		this.docker = new Docker();
 		this.docker.listContainers(function(err, containers) {
-			console.log(containers);
+			// console.log(containers);
 		});
 	},
 

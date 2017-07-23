@@ -1,5 +1,5 @@
 
-module.exports = function (opts) {
+var route = function (opts) {
 
 	var router = opts.router.instance,
 
@@ -21,6 +21,31 @@ module.exports = function (opts) {
 			console.log('mongodb connected successfully, routing list loaded');
 		});
 
+	}
+
+	const generateRoutes = (routerConfigs) => {
+		for (var key in routerConfigs) {
+			var request = routerConfigs[key];
+			if(request.subRoute) {
+				generateRoutes(request.subRoute);
+			}
+			router[request.method](key, (ctx, next) => {
+				this.currentRequestConfig.controller.call(this, ctx, next);
+			});
+		};	
+	}
+
+	const getRouterFromRouterConfigs = (routerConfigs, ctxRouter) => {
+		for (var key in routerConfigs) {
+			var request = routerConfigs[key];
+			if(request.subRoute) {
+				return getRouterFromRouterConfigs(request.subRoute, ctxRouter);
+			}
+			if(ctxRouter == key) {
+				return routerConfigs[key];
+			}
+		}
+		return undefined;
 	}
 
 	if(opts.database) {
@@ -46,7 +71,17 @@ module.exports = function (opts) {
 			if(isHitRoute) {
 				routerExistsFlag ++;
 				var path = routerStack.path;
-				this.currentRequestConfig = routerConfigs[path];
+
+				this.currentRequestConfig = getRouterFromRouterConfigs(routerConfigs, path);
+
+				if(ctx.method != this.currentRequestConfig.method) {
+					if(opts.router.methodNotSupported) {
+						opts.router.methodNotSupported.call(this, ctx, next)
+					}else {
+						ctx.body = '[micro error]: ' + ctx.method + ' is not supported for this method';					
+					}
+				}
+
 				return next();
 			}
 		};
@@ -62,11 +97,7 @@ module.exports = function (opts) {
 		return next();
 	});
 
-	for (var key in routerConfigs) {
-		var request = routerConfigs[key];
-		router[request.method](key, (ctx, next) => {
-			this.currentRequestConfig.controller.call(this, ctx, next);
-		});
-	};
-
+	generateRoutes(routerConfigs);
 }
+
+module.exports = route;

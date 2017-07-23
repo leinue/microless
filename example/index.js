@@ -2,28 +2,15 @@ const Micro = require('../src');
 
 const routers = {
 	'/': {
-		path: '/',
 		controller: function(ctx, next) {
 			ctx.body = 'index api 0.1';
 		},
 		name: 'index',
 		alias: 'index',
-		method: 'get',
-		children: {
-			'/fuck': {
-				path: '/fuck',
-				controller: function(ctx, next) {
-					ctx.body = 'fuck api 0.1';
-				},
-				name: 'index',
-				alias: 'index',
-				method: 'get'
-			}
-		}
+		method: 'get'
 	},
 
 	'/shit/:id': {
-		path: '/shit/:id',
 		controller: function(ctx, next) {
 			ctx.body = 'shit api 0.1';
 		},

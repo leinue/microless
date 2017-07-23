@@ -5,12 +5,13 @@ const Route = require('./router.js');
 const koaBody = require('koa-body');
 const Docker = require('dockerode');
 
-var Micro = function() {
+var Micro = function(opts) {
 	this.serviceList = [];
 	this.databaseList = [];
 
-	this.initKoa();
+	this.opts = opts;
 
+	this.initKoa();
 	this.initDocker();
 }
 
@@ -20,10 +21,15 @@ Micro.prototype = {
 
 		const app = new Koa();
 		const router = new Router();
-		
+
 		app.use(koaBody());
 
-		Route(router, undefined);
+		Route({
+			router: {
+				instance: router,
+				configs: this.opts.routers || []
+			}
+		});
 
 		app.use(router.routes());
 

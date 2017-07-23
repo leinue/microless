@@ -33,7 +33,7 @@ $ npm install microless --save
 
 const routers = {
   '/': {
-    controller: function(ctx, next) {
+    afterRoute: function(ctx, next) {
       ctx.body = 'index api 0.1';
     },
     method: 'get'
@@ -45,6 +45,7 @@ var opts = {
     configs: routers, //router configs
     routeNotFound: function() {}, //called when router can't be found
     methodNotSupported: function() {} //called when method can't be supported
+    onError: function() {} //called when http error happened
   }
 }
 

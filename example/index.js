@@ -2,7 +2,7 @@ const Micro = require('../src');
 
 const routers = {
 	'/': {
-		controller: function(ctx, next, response) {
+		afterRoute: function(ctx, next, response) {
 			ctx.body = response.body;
 		},
 		name: 'index',
@@ -11,7 +11,7 @@ const routers = {
 	},
 
 	'/shit/:id': {
-		controller: function(ctx, next) {
+		afterRoute: function(ctx, next) {
 			ctx.body = 'shit api 0.1, params=' + JSON.stringify(this.params);
 		},
 		name: 'shit',

@@ -59,16 +59,25 @@ var route = function (opts) {
 			}
 			router[request.method](key, (ctx, next) => {
 				return handleDockerRequest.call(ctx, ctx, next).then((body) => {
-					this.currentRequestConfig.controller.call(ctx, ctx, next, {
-						body: body
-					});					
+					if(this.currentRequestConfig.afterRoute) {
+						this.currentRequestConfig.afterRoute.call(ctx, ctx, next, {
+							body: body
+						});
+					}else {
+						ctx.body = body;
+					}
+
 				}).catch((error) => {
 					if(opts.router.onError) {
 						opts.router.onError.call(ctx, ctx, next, error);
 					}else {
-						this.currentRequestConfig.controller.call(ctx, ctx, next, {
-							error: error
-						});
+						ctx.body = error;
+					}
+
+					if(this.currentRequestConfig.onError) {
+						this.currentRequestConfig.onError.call(ctx, ctx, next, error);						
+					}else {
+						ctx.body = error;
 					}
 				});
 			});

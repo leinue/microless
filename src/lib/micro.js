@@ -8,7 +8,7 @@ const Service = require('./service.js');
 var Micro = function(servicesConfig) {
 	this.databaseList = [];
 
-	this.withDocker = !serviceConfig.withDocker ? true : false;
+	this.withDocker = !servicesConfig.withDocker ? true : false;
 
 	this.servicesConfig = servicesConfig.services || [];
 

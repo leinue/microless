@@ -22,7 +22,7 @@ const routers = {
 
 var micro = new Micro({
 
-	withDocker: false,
+	// withDocker: false,
 
 	services: [{
 		name: 'test',

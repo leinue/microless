@@ -8,10 +8,15 @@ const Service = require('./service.js');
 var Micro = function(servicesConfig) {
 	this.databaseList = [];
 
+	this.withDocker = !serviceConfig.withDocker ? true : false;
+
 	this.servicesConfig = servicesConfig.services || [];
 
 	this.initKoa();
-	this.initService();
+
+	if(this.withDocker) {
+		this.initService();
+	}
 }
 
 Micro.prototype = {
@@ -47,6 +52,7 @@ Micro.prototype = {
 
 		this.router = router;
 		this.app = app;
+		this.koa = app;
 		this.koaBody = koaBody;
 	},
 
@@ -57,22 +63,6 @@ Micro.prototype = {
 	run: function(opts, cb) {
 		opts.port = opts.port || 3000;
 		this.app.listen(opts.port, cb);
-	},
-
-	registerService: function(services, cb) {
-
-		for (var i = 0; i < services.length; i++) {
-			var service = services[i];
-			service.registered = false;
-			this.serviceList.push(service);
-		};
-
-		return this;
-	},
-
-	registerDatabase: function(serviceName, dbName, cb) {
-
-		return this;
 	}
 }
 

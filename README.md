@@ -42,6 +42,8 @@ const routers = {
 
 var opts = {
 
+  withDocker: true, //whether use docker for microservice, default is true
+
   services: [{
     name: 'test', //docker name
     port: 9999, //docker port
@@ -62,37 +64,8 @@ var opts = {
 
 var myMicroService = new Micro(opts);
 
-```
+This will run the service in a docker container named ```'micro_example'```.
 
-### Register service
-
-``` javascript
-
-var exampleService = myMicroService.registerService({
-    name: 'example',
-    function: () => {
-        console.log('service example');
-    }
-});
-
-```
-This will run the service in a docker named ```'micro_example'```.
-
-### Register database
-
-``` javascript
-
-var exampleDB = exampleService.registerDatabase({
-  name: 'example-db',
-  type: 'mongodb',
-  connection: {
-    username: '',
-    password: ''
-  }
-});
-
-```
-This will run the database service in a docker named ```'micro_example_db_example-db'```.When registered, database service's  logical service will be notified, and you can use the database instance in its callback function.
 
 ### Manage micro service
 

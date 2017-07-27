@@ -22,6 +22,8 @@ const routers = {
 
 var micro = new Micro({
 
+	withDocker: false,
+
 	services: [{
 		name: 'test',
 		port: 9999,

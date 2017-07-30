@@ -45,19 +45,22 @@ var opts = {
   withDocker: true, //whether use docker for microservice, default is true
 
   services: [{
-    name: 'test', //docker name
-    port: 9999, //docker port
-    host: 'http://localhost', //docker host
-    src: './', //docker volume
+    name: 'test',
+    containerPort: 4567,
+    hostPort: 9999,
+    host: 'http://localhost',
+    src: './',
     router: {
-      configs: routers, //router configs
-      routeNotFound: function() {}, //called when router can't be found
-      methodNotSupported: function() {} //called when method can't be supported
-      onError: function() {} //called when http error happened
+      configs: routers,
+      onError: function(ctx, next, error) {
+        // logging(error);
+        ctx.body = error;
+      }
     }
   }, {
     name: 'tests',
-    port: 4001
+    containerPort: 4567,
+    hostPort: 4001
   }]
 
 }

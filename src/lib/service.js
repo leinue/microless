@@ -64,6 +64,15 @@ Service.prototype = {
 		  	name: 'microless_' + service.name,
 		  	volume: '',
 		  	Cmd: ['/bin/bash'],
+		  	ExposedPorts: {
+		  		"25565/tcp": {}
+		  	},
+		  	PortBindings: {
+		      "25565/tcp": [{
+		        "HostPort": service.hostPort.toString()
+		      }],
+		    },
+		  	OpenStdin: true
 		}).then((container) => {
 			logging('Register Docker: ', service.name , 'Succeed');
 		  	return container.start().then(() => {

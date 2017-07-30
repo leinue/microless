@@ -26,18 +26,21 @@ var micro = new Micro({
 
 	services: [{
 		name: 'test',
-		port: 9999,
-		host: 'http://gospely.com',
+		containerPort: 4567,
+		hostPort: 9999,
+		host: 'http://localhost',
 		src: './',
 		router: {
 			configs: routers,
 			onError: function(ctx, next, error) {
+				// logging(error);
 				ctx.body = error;
 			}
 		}
 	}, {
 		name: 'tests',
-		port: 4001
+		containerPort: 4567,
+		hostPort: 4001
 	}]
 
 });

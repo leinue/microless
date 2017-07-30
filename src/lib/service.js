@@ -57,7 +57,7 @@ Service.prototype = {
 
 		var self = this;
 
-		logging('register docker', service);
+		logging('\r\n', '\r\n', 'Register Docker: ' , '\r\n' , service, '\r\n');
 
 		this.docker.createContainer({
 		  	Image: 'ubuntu',
@@ -65,13 +65,12 @@ Service.prototype = {
 		  	volume: '',
 		  	Cmd: ['/bin/bash'],
 		}).then((container) => {
-
-				
-
+			logging('Register Docker: ', service.name , 'Succeed');
 		  	return container.start().then(() => {
 		  		this.serviceList[i].container = container;
 		  	});
 		}).catch((err) => {
+			logging('\r\n', '\r\n', 'Register Failed', '\r\n', err);
 		  	throw new Error(err);
 		});
 	},

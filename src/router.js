@@ -4,8 +4,10 @@ const logging = require('./utils/logging.js');
 const handleDockerRequest = function(ctx, next, service) {
 	return new Promise((resolve, reject) => {
 
+		const url = service.host + ':' + service.hostPort || 'http://localhost:' + service.hostPort
+
 		var options = {
-		  url: service.host + ':' + service.port || 'http://localhost:' + service.port,
+		  url: url,
 		  method: ctx.method,
 		  headers: ctx.header
 		};
@@ -107,7 +109,7 @@ var route = function (opts) {
 
 		var routerExistsFlag = -1;
 
-		logging(ctx.method + 'request for: ' + ctx.originalUrl);
+		logging(ctx.method, 'request for: ' + ctx.originalUrl);
 
 		for (var j = 0; j < this.router.stack.length; j++) {
 			var routerStack = this.router.stack[j];

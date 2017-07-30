@@ -6,6 +6,8 @@ var Service = function(serviceList) {
 
 	this.serviceList = serviceList;
 
+	this.containerPrefix = 'microless_';
+
 	var socket = process.env.DOCKER_SOCKET || '/var/run/docker.sock';
 	// var stats  = fs.statSync(socket);
 
@@ -14,11 +16,11 @@ var Service = function(serviceList) {
 	// }
 
 	this.docker = new Docker();
-	this.docker.listContainers(function(err, containers) {
+	this.docker.listContainers((err, containers) => {
 		logging('list-containers:', containers);
+		this.containers = containers;
+		this.register();
 	});
-
-	this.register();
 }
 
 Service.prototype = {
@@ -33,16 +35,25 @@ Service.prototype = {
 				throw '[microless error]: service name is required';				
 			}
 
-			if(!service.port) {
-				throw '[microless error]: service port is required';
+			if(this.isContainerExistsInDockerRuntime(service)) {
+				logging('Docker: [', service.name , '] exists, skip this.');
+				continue;
+			}
+
+			if(!service.hostPort) {
+				throw '[microless error]: service hostPort is required';
+			}
+
+			if(!service.containerPort) {
+				throw '[microless error]: service containerPort is required';
 			}
 
 			if(this.isServiceParamsExists('name', service.name)) {
 				throw '[microless error]: service name [' + service.name + '] duplicated';
 			}else {
 
-				if(this.isServiceParamsExists('port', service.port)) {
-					throw '[microless error]: service port [' + service.port + '] duplicated';
+				if(this.isServiceParamsExists('hostPort', service.port)) {
+					throw '[microless error]: service hostPort [' + service.port + '] duplicated';
 				}else {
 
 					this.registerDocker(service, i);
@@ -61,7 +72,7 @@ Service.prototype = {
 
 		this.docker.createContainer({
 		  	Image: 'ubuntu',
-		  	name: 'microless_' + service.name,
+		  	name: this.containerPrefix + service.name,
 		  	volume: '',
 		  	Cmd: ['/bin/bash'],
 		  	ExposedPorts: {
@@ -91,7 +102,7 @@ Service.prototype = {
 	},
 
 	unregisterDocker: function(service) {
-		return service.remove()
+		return service.remove();
 	},
 
 	isServiceParamsExists: function(param, value) {
@@ -115,6 +126,21 @@ Service.prototype = {
 				}
 			}
 		};
+	},
+
+	isContainerExistsInDockerRuntime: function(service) {
+		for (var i = 0; i < this.containers.length; i++) {
+			var container = this.containers[i];
+			var names = container.Names;
+			for (var j = 0; j < names.length; j++) {
+				var name = names[j];
+				if(name == '/' + this.containerPrefix + service.name) {
+					return container;
+				}
+			};
+		};
+
+		return false;
 	}
 
 }

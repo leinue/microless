@@ -45,15 +45,16 @@ var opts = {
   withDocker: true, //whether use docker for microservice, default is true
 
   services: [{
-    name: 'test',
-    containerPort: 4567,
-    hostPort: 9999,
-    host: 'http://localhost',
-    src: './',
+    image: 'node', //docker image, default is ubuntu
+    name: 'test', //docker name
+    containerPort: 4567, //container port
+    hostPort: 9999, //host port
+    host: 'http://localhost', //host
+    src: 'test', //service source code
+    cmd: ['node index.js'],//will be executed when docker starting
     router: {
       configs: routers,
       onError: function(ctx, next, error) {
-        // logging(error);
         ctx.body = error;
       }
     }

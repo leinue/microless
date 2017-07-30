@@ -69,12 +69,23 @@ Service.prototype = {
 		var self = this;
 
 		logging('\r\n', '\r\n', 'Register Docker: ' , '\r\n' , service, '\r\n');
+	
+		if(service.cmd) {
+			service.cmd.push('/bin/bash');
+		}else {
+			service.cmd = [];
+		}
 
 		this.docker.createContainer({
-		  	Image: 'ubuntu',
+		  	Image: service.Image || 'ubuntu',
 		  	name: this.containerPrefix + service.name,
-		  	volume: '',
-		  	Cmd: ['/bin/bash'],
+		  	Volumes: {
+		  		'/var/workspace': {}
+		  	},
+		  	Hostconfig: {
+		  		Binds: [ service.src + ':/var/workspace']
+		  	},
+		  	Cmd: service.cmd,
 		  	ExposedPorts: {
 		  		"25565/tcp": {}
 		  	},

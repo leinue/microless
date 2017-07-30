@@ -25,15 +25,16 @@ var micro = new Micro({
 	// withDocker: false,
 
 	services: [{
+		image: 'node',
 		name: 'test',
 		containerPort: 4567,
 		hostPort: 9999,
 		host: 'http://localhost',
-		src: './',
+		src: 'test',
+		cmd: ['node index.js'],
 		router: {
 			configs: routers,
 			onError: function(ctx, next, error) {
-				// logging(error);
 				ctx.body = error;
 			}
 		}

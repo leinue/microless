@@ -64,6 +64,8 @@ var opts = {
 
 var myMicroService = new Micro(opts);
 
+```
+
 This will run the service in a docker container named ```'micro_example'```.
 
 

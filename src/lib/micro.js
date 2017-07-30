@@ -5,6 +5,8 @@ const Route = require('../router.js');
 const koaBody = require('koa-body');
 const Service = require('./service.js');
 
+const logging = require('../utils/logging.js');
+
 var Micro = function(servicesConfig) {
 	this.databaseList = [];
 
@@ -62,7 +64,11 @@ Micro.prototype = {
 
 	run: function(opts, cb) {
 		opts.port = opts.port || 3000;
-		this.app.listen(opts.port, cb);
+		this.app.listen(opts.port, (a, b) => {
+			if(cb) {
+				cb(logging)
+			}
+		});
 	}
 }
 

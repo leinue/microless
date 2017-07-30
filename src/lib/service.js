@@ -1,5 +1,6 @@
 const Docker = require('dockerode');
 const fs     = require('fs');
+const logging = require('../utils/logging.js');
 
 var Service = function(serviceList) {
 
@@ -14,7 +15,7 @@ var Service = function(serviceList) {
 
 	this.docker = new Docker();
 	this.docker.listContainers(function(err, containers) {
-		// console.log(containers);
+		logging('list-containers:', containers);
 	});
 
 	this.register();
@@ -44,7 +45,7 @@ Service.prototype = {
 					throw '[microless error]: service port [' + service.port + '] duplicated';
 				}else {
 
-					// this.registerDocker(service, i);
+					this.registerDocker(service, i);
 
 					this.serviceList[i].registered = false;
 				}
@@ -56,12 +57,17 @@ Service.prototype = {
 
 		var self = this;
 
+		logging('register docker', service);
+
 		this.docker.createContainer({
 		  	Image: 'ubuntu',
 		  	name: 'microless_' + service.name,
 		  	volume: '',
 		  	Cmd: ['/bin/bash'],
 		}).then((container) => {
+
+				
+
 		  	return container.start().then(() => {
 		  		this.serviceList[i].container = container;
 		  	});

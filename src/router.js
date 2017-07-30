@@ -1,4 +1,5 @@
 const dockerReq = require('request');
+const logging = require('./utils/logging.js');
 
 const handleDockerRequest = function(ctx, next, service) {
 	return new Promise((resolve, reject) => {
@@ -106,7 +107,7 @@ var route = function (opts) {
 
 		var routerExistsFlag = -1;
 
-		console.log('[' + Date() + ']: ' + ctx.method + ' request for: ' + ctx.originalUrl);
+		logging(ctx.method + 'request for: ' + ctx.originalUrl);
 
 		for (var j = 0; j < this.router.stack.length; j++) {
 			var routerStack = this.router.stack[j];

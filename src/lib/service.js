@@ -83,7 +83,12 @@ Service.prototype = {
 		  		'/var/workspace': {}
 		  	},
 		  	Hostconfig: {
-		  		Binds: [ service.src + ':/var/workspace']
+		  		Binds: [service.src + ':/var/workspace'],
+			  	PortBindings: {
+			      "25565/tcp": [{
+			        "HostPort": service.hostPort.toString()
+			      }],
+			    }
 		  	},
 		  	Cmd: service.cmd,
 		  	ExposedPorts: {

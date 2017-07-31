@@ -30,8 +30,8 @@ var micro = new Micro({
 		containerPort: 4567,
 		hostPort: 9999,
 		host: 'http://localhost',
-		src: 'test',
-		cmd: ['node index.js'],
+		src: '/tmp/fuck',
+		// cmd: ['node index.js'],
 		router: {
 			configs: routers,
 			onError: function(ctx, next, error) {

@@ -85,17 +85,17 @@ Service.prototype = {
 		  	Hostconfig: {
 		  		Binds: [service.src + ':/var/workspace'],
 			  	PortBindings: {
-			      "25565/tcp": [{
+			      [service.containerPort + "/tcp"]: [{
 			        "HostPort": service.hostPort.toString()
 			      }],
 			    }
 		  	},
 		  	Cmd: service.cmd,
 		  	ExposedPorts: {
-		  		"25565/tcp": {}
+		  		[service.containerPort + "/tcp"]: {}
 		  	},
 		  	PortBindings: {
-		      "25565/tcp": [{
+		      [service.containerPort + "/tcp"]: [{
 		        "HostPort": service.hostPort.toString()
 		      }],
 		    },

@@ -58,10 +58,6 @@ var opts = {
         ctx.body = error;
       }
     }
-  }, {
-    name: 'tests',
-    containerPort: 4567,
-    hostPort: 4001
   }]
 
 }
@@ -70,7 +66,7 @@ var myMicroService = new Micro(opts);
 
 ```
 
-This will run the service in a docker container named ```'micro_example'```.
+This will run the service in a docker container named ```'microless_test'```.
 
 
 ### Manage micro service

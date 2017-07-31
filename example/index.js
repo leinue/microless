@@ -31,7 +31,7 @@ var micro = new Micro({
 		hostPort: 9999,
 		host: 'http://localhost',
 		src: '/tmp/fuck',
-		// cmd: ['node index.js'],
+		cmd: ['cat index.js'],
 		router: {
 			configs: routers,
 			onError: function(ctx, next, error) {

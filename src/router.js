@@ -4,7 +4,7 @@ const logging = require('./utils/logging.js');
 const handleDockerRequest = function(ctx, next, service) {
 	return new Promise((resolve, reject) => {
 
-		const url = service.host + ':' + service.hostPort || 'http://localhost:' + service.hostPort
+		const url = (service.host || 'http://localhost') + ':' + service.hostPort || 'http://localhost:' + service.hostPort
 
 		var options = {
 		  url: url,
@@ -32,27 +32,11 @@ var route = function (opts) {
 
 	var router = opts.router.instance,
 
-		routerConfigs = opts.router.configs,
+		modem = opts.router.modem,
+
+		routerConfigs = modem.configs,
 
 		service = opts.service;
-
-	const connectDB = () => {
-		var db = mongoose.connection;
-
-		db.on('error', (error) => {
-
-			console.log('mongodb connected failed', error);
-
-			router.get('*', function (ctx, next) {
-				ctx.status = 500;
-			});		
-		});
-
-		db.once('open', () => {
-			console.log('mongodb connected successfully, routing list loaded');
-		});
-
-	}
 
 	const generateRoutes = (routerConfigs) => {
 		for (var key in routerConfigs) {
@@ -71,8 +55,8 @@ var route = function (opts) {
 					}
 
 				}).catch((error) => {
-					if(opts.router.onError) {
-						opts.router.onError.call(ctx, ctx, next, error);
+					if(modem.onError) {
+						modem.onError.call(ctx, ctx, next, error);
 					}else {
 						ctx.body = error;
 					}
@@ -127,8 +111,8 @@ var route = function (opts) {
 				this.currentRequestConfig = getRouterFromRouterConfigs(routerConfigs, path);
 
 				if(ctx.method.toLowerCase() != this.currentRequestConfig.method.toLowerCase()) {
-					if(opts.router.methodNotSupported) {
-						opts.router.methodNotSupported.call(this, ctx, next)
+					if(modem.methodNotSupported) {
+						modem.methodNotSupported.call(this, ctx, next)
 					}else {
 						ctx.body = '[micro error]: ' + ctx.method + ' is not supported for this method';					
 					}
@@ -141,8 +125,8 @@ var route = function (opts) {
 		};
 
 		if(routerExistsFlag < 0) {
-			if(opts.router.routeNotFound) {
-				opts.router.routeNotFound.call(this, ctx, next)
+			if(modem.routeNotFound) {
+				modem.routeNotFound.call(this, ctx, next)
 			}else {
 				ctx.body = '[micro error]: ' + ctx.originalUrl + ' not found';
 			}

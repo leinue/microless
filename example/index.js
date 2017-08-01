@@ -2,6 +2,7 @@ const Micro = require('../src');
 
 const routers = {
 	'/': {
+		//called when route ends
 		afterRoute: function(ctx, next, response) {
 			ctx.body = response.body;
 		},
@@ -11,6 +12,7 @@ const routers = {
 	},
 
 	'/shit/:id': {
+		//called when route ends
 		afterRoute: function(ctx, next) {
 			ctx.body = 'shit api 0.1, params=' + JSON.stringify(this.params);
 		},
@@ -22,40 +24,42 @@ const routers = {
 
 var micro = new Micro({
 
-	withDocker: false,
-
-	dockerMachine: {
-
-	},
-
 	compose: {
 		src: './docker-compose.yml'
 	},
 
-	services: [{
-		image: 'node',
-		name: 'test',
-		containerPort: 4567,
-		hostPort: 9999,
-		host: 'http://localhost',
-		src: '/Volumes/fuck',
-		cmd: ['node /var/workspace/index.js'],
-		router: {
+	modems: {
+		web: {
 			configs: routers,
+
+			//called when modem on error
 			onError: function(ctx, next, error) {
 				ctx.body = error;
+			},
+
+			//called when method not supported
+			methodNotSupported: function(ctx, next, error) {
+
+			},
+
+			//called when route not found
+			routeNotFound: function(ctx, next, error) {
+
 			}
 		}
-	}, {
-		name: 'tests',
-		containerPort: 4567,
-		hostPort: 4001
-	}]
+	},
 
-});
+	server: {
+		port: 3001
+	},
 
-micro.run({
-	port: 3001
-}, (logging) => {
-	logging('example is running on port 3001');
+	//called when successfully exectuing docker-compose
+	onSuccess: function() {
+
+	},
+
+	//called when exectuing docker-compose failed
+	onError: function() {
+
+	}
 });

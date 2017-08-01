@@ -8,24 +8,64 @@ const Service = require('./service.js');
 const logging = require('../utils/logging.js');
 const YAML = require('yamljs');
 
+const Compose = require('./compose/index.js');
+
 var Micro = function(opts) {
-	this.withDocker = !opts.withDocker ? false : true;
 
-	this.servicesConfig = opts.services || [];
+	this.serviceConfigs = [];
+	this.modems = opts.modems;
 
-	this.initKoa();
-
-	if(this.withDocker) {
-		this.initService();
+	if(!opts.compose) {
+		// this.initService();
 	}
 
 	if(opts.compose) {
-		this.compose = opts.compose;
-		this.parseCompose();
+		this.composeInfo = opts.compose;
+		this.compose = new Compose();
+
+		this.compose.up(this.composeInfo.src)
+		.then(() => {
+			this.parseCompose();
+			this.run(opts.server, opts.onSuccess);
+		})
+		.catch((error) => {
+			logging(error);
+			if(opts.onError) {
+				opts.onError(error);
+			}
+		});
 	} 
 }
 
 Micro.prototype = {
+
+	parseCompose: function() {
+		var composeConfig = YAML.load(this.composeInfo.src);
+
+		if(!composeConfig['services']) {
+			logging('[Warning]: docker compose file lost services')
+		}
+
+		for(var serviceName in composeConfig['services']) {
+			var service = composeConfig['services'][serviceName];
+
+			if(!service['ports']) {
+				throw '[Error]: microless service must have exposed port in docker-compose file'
+			}
+
+			var ports = service.ports[0].split(':');
+
+			this.serviceConfigs.push({
+				containerPort: ports[1],
+				hostPort: ports[0],
+				name: serviceName
+			});
+		}
+
+		logging(this.serviceConfigs);
+
+		this.initKoa()		
+	},	
 
 	initKoa: function() {
 
@@ -34,20 +74,13 @@ Micro.prototype = {
 
 		app.use(koaBody());
 
-		for (var i = 0; i < this.servicesConfig.length; i++) {
-			var serviceConfig = this.servicesConfig[i];
-
-			if(!serviceConfig.router) {
-				continue;
-			}
+		for (var i = 0; i < this.serviceConfigs.length; i++) {
+			var serviceConfig = this.serviceConfigs[i];
 
 			Route({
 				router: {
 					instance: router,
-					configs: serviceConfig.router.configs || {},
-					routeNotFound: serviceConfig.router.routeNotFound,
-					methodNotSupported: serviceConfig.router.methodNotSupported,
-					onError: serviceConfig.router.onError
+					modem: this.modems[serviceConfig.name]
 				},
 				service: serviceConfig
 			});
@@ -63,27 +96,7 @@ Micro.prototype = {
 	},
 
 	initService: function() {
-		this.service = new Service(this.servicesConfig);
-	},
-
-	parseCompose: function() {
-		var composeConfig = YAML.load(this.compose.src);
-
-		if(!composeConfig['services']) {
-			logging('[Warning]: docker compose file lost services')
-		}
-
-		for(var serviceName in composeConfig['services']) {
-			var service = composeConfig['services'][serviceName];
-
-			if(!service['ports']) {
-				throw '[Error]: microless service must has exposed port in docker-compose file'
-			}
-
-			
-
-
-		}
+		this.service = new Service(this.serviceConfigs);
 	},
 
 	run: function(opts, cb) {

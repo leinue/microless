@@ -4,10 +4,9 @@ var Compose = function() {}
 
 Compose.prototype = {
 
-	up: function() {
-
+	up: function(yaml) {
 		return new Promise(function(resolve, reject) {
-			exec('docker-compose up -d' + dir, function(error, data) {
+			exec('cd ' + process.cwd() + ' && docker-compose up -d', function(error, data) {
 				if (error) reject(error);
 				resolve(data);
 			});

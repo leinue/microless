@@ -22,7 +22,15 @@ const routers = {
 
 var micro = new Micro({
 
-	// withDocker: false,
+	withDocker: false,
+
+	dockerMachine: {
+
+	},
+
+	compose: {
+		src: './docker-compose.yml'
+	},
 
 	services: [{
 		image: 'node',
@@ -30,8 +38,8 @@ var micro = new Micro({
 		containerPort: 4567,
 		hostPort: 9999,
 		host: 'http://localhost',
-		src: '/tmp/fuck',
-		cmd: ['cat index.js'],
+		src: '/Volumes/fuck',
+		cmd: ['node /var/workspace/index.js'],
 		router: {
 			configs: routers,
 			onError: function(ctx, next, error) {

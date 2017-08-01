@@ -77,7 +77,7 @@ Service.prototype = {
 		}
 
 		this.docker.createContainer({
-		  	Image: service.Image || 'ubuntu',
+		  	Image: service.image || 'ubuntu',
 		  	name: this.containerPrefix + service.name,
 		  	Volumes: {
 		  		'/var/workspace': {}

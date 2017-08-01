@@ -6,19 +6,23 @@ const koaBody = require('koa-body');
 const Service = require('./service.js');
 
 const logging = require('../utils/logging.js');
+const YAML = require('yamljs');
 
-var Micro = function(servicesConfig) {
-	this.databaseList = [];
+var Micro = function(opts) {
+	this.withDocker = !opts.withDocker ? false : true;
 
-	this.withDocker = !servicesConfig.withDocker ? true : false;
-
-	this.servicesConfig = servicesConfig.services || [];
+	this.servicesConfig = opts.services || [];
 
 	this.initKoa();
 
 	if(this.withDocker) {
 		this.initService();
 	}
+
+	if(opts.compose) {
+		this.compose = opts.compose;
+		this.parseCompose();
+	} 
 }
 
 Micro.prototype = {
@@ -60,6 +64,26 @@ Micro.prototype = {
 
 	initService: function() {
 		this.service = new Service(this.servicesConfig);
+	},
+
+	parseCompose: function() {
+		var composeConfig = YAML.load(this.compose.src);
+
+		if(!composeConfig['services']) {
+			logging('[Warning]: docker compose file lost services')
+		}
+
+		for(var serviceName in composeConfig['services']) {
+			var service = composeConfig['services'][serviceName];
+
+			if(!service['ports']) {
+				throw '[Error]: microless service must has exposed port in docker-compose file'
+			}
+
+			
+
+
+		}
 	},
 
 	run: function(opts, cb) {

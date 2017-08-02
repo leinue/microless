@@ -320,3 +320,6 @@ var micro = new Micro({
 
 ```
 
+Enjoy your microservice with docker and nodejs :)
+
+For more visit author's website: [ivydom](http://ivydom.com)

@@ -8,18 +8,17 @@ Microservice framework for node.js to make container-based microservice web appl
 
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/Architecture.png?raw=true)
 
-1. Deploying microservices with docker containers
+1. Deploying microservices with docker containers, using docker-compose and docker swarm
 2. Transferring the data between the services via JSON strings and RESTful API
 3. Every single serivice has it's own database
 4. API Gateway serves as the controlling unit, which controls the whole system.You can do some universal works like auth or log
 5. Using docker-compose to compose containers
 6. Easily using docker swarm mode
 7. Easily Integrated with koa middlewares
-8. DevOps supported
 
 ## Installation
 
-Micro requires node v7.6.0 or higher for ES2015 and async function support, also requires docker.
+Micro requires node v7.6.0 or higher for ES2015 and async function support, also requires [docker](http://docker.com).
 
 ```
 $ npm install microless --save
@@ -27,7 +26,28 @@ $ npm install microless --save
 
 ## Getting started
 
-### init
+The example shows the ability to start a python container and request to it using microless
+
+### write compose file
+
+``` shell
+
+version: "2"
+services:
+  web:
+    image: python
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "4000:80"
+    networks:
+      - webnet
+networks:
+  webnet:
+
+```
 
 ``` javascript
 

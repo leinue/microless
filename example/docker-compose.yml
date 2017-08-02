@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    image: python
+    build: .
     deploy:
       replicas: 5
       restart_policy:

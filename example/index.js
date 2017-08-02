@@ -6,8 +6,6 @@ const routers = {
 		afterRoute: function(ctx, next, response) {
 			ctx.body = response.body;
 		},
-		name: 'index',
-		alias: 'index',
 		method: 'get'
 	},
 
@@ -16,8 +14,6 @@ const routers = {
 		afterRoute: function(ctx, next) {
 			ctx.body = 'shit api 0.1, params=' + JSON.stringify(this.params);
 		},
-		name: 'shit',
-		alias: 'shit',
 		method: 'get'
 	}
 }
@@ -59,7 +55,7 @@ var micro = new Micro({
 	},
 
 	//called when exectuing docker-compose failed
-	onError: function() {
-
+	onError: function(error) {
+		console.log(error);
 	}
 });

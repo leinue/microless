@@ -146,7 +146,7 @@ Then the project will run at port 3001.
 
 When you visit ```http://locahost:3001```, you will see the result from python programs, every single request from ```http://locahost:3001``` will automatically router to the right microservice.
 
-![run](https://github.com/Authing/micro.js/blob/master/assets/getting-started.png?raw=true)
+![run](https://github.com/Authing/microless/blob/master/assets/run.png?raw=true)
 
 ## Other Configs
 

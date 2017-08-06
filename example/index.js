@@ -23,7 +23,8 @@ var micro = new Micro({
 	name: 'test',
 
 	compose: {
-		src: './docker-compose.yml'
+		src: './docker-compose.yml',
+		dockerfile: '.'
 	},
 
 	modems: {

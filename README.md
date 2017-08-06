@@ -120,6 +120,7 @@ var micro = new Micro({
 
   compose: {
     src: './docker-compose.yml' //docker compose file
+    dockerfile: '.'
   },
 
   // router to microservice  
@@ -151,12 +152,13 @@ When you visit ```http://locahost:3001```, you will see the result from python p
 
 ### Compose
 
-Compose defines the src of ```docker-compose``` file.
+Compose defines the src of file ```docker-compose``` and ```dockefile```
 
 ``` javascript
 
   compose: {
-    src: './docker-compose.yml'
+    src: './docker-compose.yml', //default is './docker-compose.yml'
+    dockerfile: '.' //dockerfile directory, default is .
   }
 
 ```
@@ -264,7 +266,7 @@ A complete start code is like this:
 
 ``` javascript
 
-const Micro = require('microless');
+const Micro = require('../src');
 
 const routers = {
   '/': {
@@ -286,8 +288,11 @@ const routers = {
 
 var micro = new Micro({
 
+  name: 'test',
+
   compose: {
-    src: './docker-compose.yml'
+    src: './docker-compose.yml',
+    dockerfile: '.'
   },
 
   modems: {
@@ -316,15 +321,16 @@ var micro = new Micro({
   },
 
   //called when successfully exectuing docker-compose
-  onSuccess: function() {
+  // onSuccess: function() {
 
-  },
+  // },
 
   //called when exectuing docker-compose failed
   onError: function(error) {
     console.log(error);
   }
 });
+
 
 ```
 

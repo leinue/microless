@@ -11,6 +11,8 @@ const YAML = require('yamljs');
 const Swarm = require('./swarm/index.js');
 const randomString = require('../utils/randomString.js');
 
+const exec = require('child_process').exec;
+
 var Micro = function(opts) {
 
 	this.serviceConfigs = [];
@@ -18,26 +20,34 @@ var Micro = function(opts) {
 	this.projectName = opts.name || randomString(8);
 
 	if(opts.compose) {
-		this.composeInfo = opts.compose;
+		this.composeInfo = opts.compose || {
+			src: './docker-compose.yml',
+			dockerfile: '.'
+		};
 
-		this.parseCompose();
+		this.composeInfo.src = this.composeInfo.src || './docker-compose.yml';
+		this.composeInfo.dockerfile = this.composeInfo.dockerfile || '.';
 
-		logging('deploying containers....')
+		this.parseCompose(() => {
 
-		this.swarm = new Swarm();
+			logging('deploying containers....')
 
-		this.swarm.deploy(this.projectName)
-		.then((data) => {
-			logging('deploying containers success');
-			logging('start to get koa instance...');
-			this.initKoa();
-			this.run(opts.server, opts.onSuccess);
-		})
-		.catch((error) => {
-			logging('[Error]:', error);
-			if(opts.onError) {
-				opts.onError(error);
-			}
+			this.swarm = new Swarm();
+
+			this.swarm.deploy(this.projectName)
+			.then((data) => {
+				logging('deploying containers success');
+				logging('start to get koa instance...');
+				this.initKoa();
+				this.run(opts.server, opts.onSuccess);
+			})
+			.catch((error) => {
+				logging('[Error]:', error);
+				if(opts.onError) {
+					opts.onError(error);
+				}
+			});
+
 		});
 
 	} 
@@ -45,12 +55,16 @@ var Micro = function(opts) {
 
 Micro.prototype = {
 
-	parseCompose: function() {
+	parseCompose: function(cb) {
+
 		var composeConfig = YAML.load(this.composeInfo.src);
 
 		if(!composeConfig['services']) {
 			logging('[Warning]: docker compose file lost services')
 		}
+
+		var count = 0,
+ 			len = 0;
 
 		for(var serviceName in composeConfig['services']) {
 			var service = composeConfig['services'][serviceName];
@@ -64,12 +78,31 @@ Micro.prototype = {
 			this.serviceConfigs.push({
 				containerPort: ports[1],
 				hostPort: ports[0],
-				name: serviceName
+				name: serviceName,
+				image: service.image
 			});
+
+			len++
+
+			exec('cd ' + process.cwd() + ' && docker build -t ' + service.image + ' ' + this.composeInfo.dockerfile, { t: 'service.image' }, (err, response) => {
+				if(err) {
+					throw err
+				}
+
+				count++;
+
+				logging('build image', service.image);
+
+				if(cb && count == len) {
+					logging('load yaml and build images success, detail:', this.serviceConfigs);
+					cb();
+				}
+
+			});
+
 		}
 
-		logging('load yaml success, detail:', this.serviceConfigs);
-	},	
+	},
 
 	initKoa: function() {
 

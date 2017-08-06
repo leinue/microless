@@ -9,6 +9,17 @@ Swarm.prototype = {
 		return new Promise((resolve, reject) => {
 			var command = 'cd ' + process.cwd() + ' && docker swarm leave --force && docker swarm init';
 			logging('exectuing: ', command, '...');
+
+			var deploy = () => {
+				this.stackDeploy(projectName)
+				.then((data) => {
+					resolve(data);
+				})
+				.catch((error) => {
+					reject(error);
+				});
+			}
+
 			exec(command, (error, data) => {
 				if (error) {
 					logging('leave docker swarm failed, trying to retry...');
@@ -18,26 +29,13 @@ Swarm.prototype = {
 						if (error) {
 							reject(error);
 						}else {
-							logging('init swarm success');							
-							this.stackDeploy(projectName)
-							.then((data) => {
-								resolve(data);
-							})
-							.catch((error) => {
-								reject(error);
-							});
+							logging('init swarm success');
+							deploy();
 						}
 					});
 				}else {
 					logging('init swarm success');
-
-					this.stackDeploy(projectName)
-					.then((data) => {
-						resolve(data);
-					})
-					.catch((error) => {
-						reject(error);
-					});
+					deploy();
 				}
 			});
 		});

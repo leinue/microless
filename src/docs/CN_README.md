@@ -1,45 +1,40 @@
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/logo.png?raw=true)
 
-Microservice framework for node.js to make container-based microservice web applications and APIs more enjoyable to write. Micro is based on koa.js, allowing you to use all the features that koa has.
+Microless是一个基于node.js koa的微服务框架，旨在让开发者快速开发基于容器架构的微服务Web程序和API接口。Microless基于koa.js，所以所有的koa中间件都以正常使用。
 
-## Docs
+## 特性
 
-1. [中文文档](https://github.com/Authing/microless/blob/master/docs/CN_README.md)
-
-## Features
-
-> Make microservice reachable 
+> 让微服务触手可及
 
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/Architecture.png?raw=true)
 
-1. Deploying microservices with docker containers, using docker stack deploy and docker swarm
-2. Transferring the data between the services via JSON strings and RESTful API
-3. Every single serivice has it's own database
-4. API Gateway serves as the controlling unit, which controls the whole system.You can do some universal works like auth or log
-5. Using docker deploy to manage containers and services
-6. Easily Integrated with koa middlewares
+1. 使用docker stack deploy和docker swarm部署基于docker的微服务
+2. 通过JSON字符串和RESTful API在微服务之间交换数据
+3. 每一个微服务都可以拥有自己的数据库（在docker-compose文件中配置即可）
+4. API网关作为控制单元，可以在这里做一些通用操作，比如炎症或日志记录
+5. 轻松使用koa中间件
 
-## Installation
+## 安装
 
-### Install Docker
+### 安装 Docker
 
-please visit [docker doc](https://docs.docker.com/get-started)
+请参考Docker官方文档 [docker doc](https://docs.docker.com/get-started)
 
-**ATTENTION:** ```docker swarm``` and ``` docker-compose ``` is also needed.
+**注意:** ```docker swarm``` 和 ``` docker-compose ``` 是必须要安装的。
 
-### Install Microless
+### 安装 Microless
 
-Microless requires node v7.6.0 or higher for ES2015 and async function support.
+Microless 需要 node v7.6.0 或者更高版本，为了使用ES2015和async function相关功能。
 
 ```
 $ npm install microless --save
 ```
 
-## Getting started
+## 起步走
 
-The example shows the ability to start a python container using microless, you can get the source code in folder [example](https://github.com/Authing/microless/tree/master/example)
+这个例子展现了使用microless启动一个python微服务的能力，你可以在 [example](https://github.com/Authing/microless/tree/master/example) 中找到代码。
 
-### Write Python Code
+### 编写Python代码
 
 ``` python
 
@@ -57,9 +52,9 @@ if __name__ == "__main__":
 
 ```
 
-This program will run a python server at port 80.
+这个程序将会运行在80端口（容器内）。
 
-### Write Dockerfile
+### 编写 Dockerfile
 
 ``` shell
 
@@ -83,9 +78,9 @@ CMD ["python", "app.py"]
 
 ```
 
-This Dockerfile defines a image which can start a python server at port 80.
+这个Dockerfile定义了一个运行在80端口的python程序，同时需要flask框架。
 
-### Write Compose File
+### 编写 Compose 文件
 
 Save as ```docker-compose.yml```
 
@@ -100,11 +95,11 @@ services:
       - "4000:80"
 
 ```
-This compose file starts a python container called ```web``` with exposed port ```4000```, which uses the above ```Dockerfile```.
+这个docker-compose文件启动了一个名叫```web```的容器，暴露了宿主机端口4000，指向容器内的80端口。
 
-For more details please visit [docker docs](http://docker.com).
+更多关于docker-compose的使用方法请参考：[docker文档](http://docker.com).
 
-### Write Microless Code
+### 编写 Microless 代码
 
 ``` javascript
 
@@ -144,19 +139,17 @@ var micro = new Micro({
 
 ```
 
-This will run the service in a docker container named ```'example_web_1'```.
+这个程序将会运行在3001端口。
 
-Then the project will run at port 3001.
-
-When you visit ```http://locahost:3001```, you will see the result from python programs, every single request from ```http://locahost:3001``` will automatically router to the right microservice.
+当你访问 ```http://locahost:3001```时，你会发现由python微服务传回来的数据，实际上运行在``` http://localhost:4000```上。microless的路由功能会选择正确的微服务并返回正确的response（包括header等信息）。
 
 ![run](https://github.com/Authing/microless/blob/master/assets/run.png?raw=true)
 
-## Other Configs
+## 其它配置
 
 ### Compose
 
-Compose defines the src of file ```docker-compose``` and ```dockefile```
+Compose定义了 ```docker-compose``` 和 ```dockefile```的地址
 
 ``` javascript
 
@@ -167,11 +160,11 @@ Compose defines the src of file ```docker-compose``` and ```dockefile```
 
 ```
 
-### Modems
+### 路由（Modems）
 
-Modems mainly defines the router to microservice. Every single request from ```http://locahost:3001``` will automatically router to the right microservice, so your router configs in the microless must ```as same as``` the router defined in the microservice.
+路由的功能主要是到微服务的路径，每一个从```http://locahost:3001```发出去的请求将会自动路由到正确的微服务商，所以在microless中的路由配置必须和在微服务中的路由定义完全一样，因为microless会将HTTP请求完全转发。
 
-For example, if you define a container called ```web``` in docker-compose.yml, you must write ```web``` as a ```key``` in modems like this:
+举个例子，如果你在docker-compose文件中定义了一个名叫```web```的服务，你必须将web作为microless配置中的modems的一个键：
 
 ``` javascript
 
@@ -189,9 +182,9 @@ For example, if you define a container called ```web``` in docker-compose.yml, y
 
 ```
 
-#### Router Configs
+#### 路由配置
 
-A symbol config is like this:
+一个标准的路由类似这样：
 
 ``` javascript
 
@@ -215,16 +208,16 @@ A symbol config is like this:
 
 ```
 
-There are two attributes that router config has:
+路由配置有两个属性
 
-1. ```method```: **required**, defines a http request method
-2. ```afterRoute```: **optional**, called when route ends, you can handle the result from microservice and display it in other way.when you use this attribute, you must write ```ctx.body = xxx```, otherwise you would see a blank page.
+1. ```method```: **必需**, 定义HTTP请求方式
+2. ```afterRoute```: **可选**, 路由结束后被调用，你可以在这里处理从微服务得到的数据。一旦启用了这个方法，必需要写```ctx.body = xxx```，否则你将会看到一个空白页面。
 
-P.S. The router follows the koa-router.
+P.S. 路由系统用的是koa-router中间件
 
-#### Error Handling in Modems
+#### 路由错误处理
 
-Currently, microless has three error handling methods when modem to a microservice:
+目前，microless拥有三种错误处理方式：
 
 ``` javascript
 
@@ -232,17 +225,17 @@ Currently, microless has three error handling methods when modem to a microservi
     web: {
       configs: routers,
 
-      //called when modem on error
+      //当路由出错时调用
       onError: function(ctx, next, error) {
         ctx.body = error;
       },
 
-      //called when method not supported
+      //当方法不被支持时调用
       methodNotSupported: function(ctx, next, error) {
 
       },
 
-      //called when route not found
+      //当路由未找到时调用
       routeNotFound: function(ctx, next, error) {
 
       }
@@ -251,22 +244,22 @@ Currently, microless has three error handling methods when modem to a microservi
 
 ```
 
-1. ```onError```: **optional**, called when modem on error.
-2. ```methodNotSupported```: **optional**, called when method not supported.
-3. ```routeNotFound```: **optional**, called when route not found.
+1. ```onError```: **可选**, 当路由出错时调用。
+2. ```methodNotSupported```: **可选**, 当方法不被支持时调用。
+3. ```routeNotFound```: **可选**, 当路由未找到时调用。
 
 ### Server
 
-Server just has one attribute:
+Server只有一个属性：
 
-1. ```port```: **required**, defines the main port of the service.
+1. ```port```: **必需**, 定义整个服务的启动端口。
 
-### Error Handling
+### 错误处理
 
-1. ```onSuccess```: **optional**, called when successfully exectuing docker-compose
-2. ```onError```: **optional**, called when exectuing docker-compose failed
+1. ```onSuccess```: **可选**, 当执行docker-compose成功时被调用
+2. ```onError```: **可选**, docker-compose执行失败时被调用
 
-A complete start code is like this:
+一个完整的启动代码类似这样:
 
 ``` javascript
 

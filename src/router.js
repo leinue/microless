@@ -19,8 +19,10 @@ const handleDockerRequest = function(ctx, next, service) {
 			}
 
 		  	if (!error && response.statusCode == 200) {
-		    	// var info = JSON.parse(body);
-		    	resolve(body);
+		    	resolve({
+		    		response,
+		    		body
+		    	});
 		  	}
 		}
 
@@ -45,16 +47,22 @@ var route = function (opts) {
 				generateRoutes(request.subRoute);
 			}
 			router[request.method](key, (ctx, next) => {
-				return handleDockerRequest.call(ctx, ctx, next, service).then((body) => {
+				return handleDockerRequest.call(ctx, ctx, next, service)
+				.then((opts) => {
+					ctx.set(opts.response.headers);
+					
 					if(this.currentRequestConfig.afterRoute) {
 						this.currentRequestConfig.afterRoute.call(ctx, ctx, next, {
-							body: body
+							body: opts.body,
+							response: opts.response
 						});
 					}else {
-						ctx.body = body;
+						console.log(opts.response.headers);
+						ctx.body = opts.body;
 					}
 
-				}).catch((error) => {
+				})
+				.catch((error) => {
 					if(modem.onError) {
 						modem.onError.call(ctx, ctx, next, error);
 					}else {

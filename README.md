@@ -8,17 +8,24 @@ Microservice framework for node.js to make container-based microservice web appl
 
 ![arch](https://github.com/Authing/micro.js/blob/master/assets/Architecture.png?raw=true)
 
-1. Deploying microservices with docker containers, using docker-compose and docker swarm
+1. Deploying microservices with docker containers, using docker stack deploy and docker swarm
 2. Transferring the data between the services via JSON strings and RESTful API
 3. Every single serivice has it's own database
 4. API Gateway serves as the controlling unit, which controls the whole system.You can do some universal works like auth or log
-5. Using docker-compose to compose containers
-6. Easily using docker swarm mode
-7. Easily Integrated with koa middlewares
+5. Using docker deploy to manage containers and services
+6. Easily Integrated with koa middlewares
 
 ## Installation
 
-Micro requires node v7.6.0 or higher for ES2015 and async function support, also requires [docker](http://docker.com).
+### Install Docker
+
+please visit [docker doc](https://docs.docker.com/get-started)
+
+**ATTENTION:** ```docker swarm``` and ``` docker-compose ``` is also needed.
+
+### Install Microless
+
+Microless requires node v7.6.0 or higher for ES2015 and async function support.
 
 ```
 $ npm install microless --save
@@ -83,11 +90,10 @@ Save as ```docker-compose.yml```
 version: "2"
 services:
   web:
+    image: 'example_web'
     build: .
     ports:
       - "4000:80"
-    networks:
-      - webnet
 
 ```
 This compose file starts a python container called ```web``` with exposed port ```4000```, which uses the above ```Dockerfile```.
@@ -109,6 +115,8 @@ const routers = {
 }
 
 var micro = new Micro({
+
+  name: 'test', //project name
 
   compose: {
     src: './docker-compose.yml' //docker compose file

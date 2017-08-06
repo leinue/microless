@@ -5,7 +5,7 @@ var Swarm = function() {}
 
 Swarm.prototype = {
 
-	deploy: function(yaml, projectName) {
+	deploy: function(projectName) {
 		return new Promise((resolve, reject) => {
 			var command = 'cd ' + process.cwd() + ' && docker swarm leave --force && docker swarm init';
 			logging('exectuing: ', command, '...');

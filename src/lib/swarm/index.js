@@ -11,7 +11,23 @@ Swarm.prototype = {
 			logging('exectuing: ', command, '...');
 			exec(command, (error, data) => {
 				if (error) {
-					reject(error);
+					logging('leave docker swarm failed, trying to retry...');
+					var command = 'cd ' + process.cwd() + ' && docker swarm init';
+					logging('exectuing: ', command, '...');
+					exec(command, (error, data) => {
+						if (error) {
+							reject(error);
+						}else {
+							logging('init swarm success');							
+							this.stackDeploy(projectName)
+							.then((data) => {
+								resolve(data);
+							})
+							.catch((error) => {
+								reject(error);
+							});
+						}
+					});
 				}else {
 					logging('init swarm success');
 

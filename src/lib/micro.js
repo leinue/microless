@@ -8,32 +8,38 @@ const Service = require('./service.js');
 const logging = require('../utils/logging.js');
 const YAML = require('yamljs');
 
-const Compose = require('./compose/index.js');
+const Swarm = require('./swarm/index.js');
+const randomString = require('../utils/randomString.js');
 
 var Micro = function(opts) {
 
 	this.serviceConfigs = [];
 	this.modems = opts.modems;
-
-	if(!opts.compose) {
-		// this.initService();
-	}
+	this.projectName = opts.name || randomString(8);
 
 	if(opts.compose) {
 		this.composeInfo = opts.compose;
-		this.compose = new Compose();
 
-		this.compose.up(this.composeInfo.src)
-		.then(() => {
-			this.parseCompose();
+		this.parseCompose();
+
+		logging('deploying containers....')
+
+		this.swarm = new Swarm();
+
+		this.swarm.deploy(this.projectName)
+		.then((data) => {
+			logging('deploying containers success');
+			logging('start to get koa instance...');
+			this.initKoa();
 			this.run(opts.server, opts.onSuccess);
 		})
 		.catch((error) => {
-			logging(error);
+			logging('[Error]:', error);
 			if(opts.onError) {
 				opts.onError(error);
 			}
 		});
+
 	} 
 }
 
@@ -62,9 +68,7 @@ Micro.prototype = {
 			});
 		}
 
-		logging(this.serviceConfigs);
-
-		this.initKoa()		
+		logging('load yaml success, detail:', this.serviceConfigs);
 	},	
 
 	initKoa: function() {
@@ -93,6 +97,8 @@ Micro.prototype = {
 		this.app = app;
 		this.koa = app;
 		this.koaBody = koaBody;
+
+		logging('get koa instance success');
 	},
 
 	initService: function() {
@@ -104,6 +110,8 @@ Micro.prototype = {
 		this.app.listen(opts.port, (a, b) => {
 			if(cb) {
 				cb(logging)
+			}else {
+				logging('server started success, running at port ' + opts.port);
 			}
 		});
 	}

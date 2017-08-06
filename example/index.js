@@ -20,6 +20,8 @@ const routers = {
 
 var micro = new Micro({
 
+	name: 'test',
+
 	compose: {
 		src: './docker-compose.yml'
 	},
@@ -50,9 +52,9 @@ var micro = new Micro({
 	},
 
 	//called when successfully exectuing docker-compose
-	onSuccess: function() {
+	// onSuccess: function() {
 
-	},
+	// },
 
 	//called when exectuing docker-compose failed
 	onError: function(error) {

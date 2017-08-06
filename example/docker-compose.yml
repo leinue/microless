@@ -1,6 +1,7 @@
 version: "3"
 services:
   web:
+    image: 'example_web'
     build: .
     deploy:
       replicas: 5
@@ -8,7 +9,3 @@ services:
         condition: on-failure
     ports:
       - "4000:80"
-    networks:
-      - webnet
-networks:
-  webnet:

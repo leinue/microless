@@ -11,7 +11,6 @@ Compose.prototype = {
 				resolve(data);
 			});
 		});
-
 	}
 
 }

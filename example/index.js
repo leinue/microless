@@ -9,13 +9,13 @@ const routers = {
 		method: 'get'
 	},
 
-	'/shit/:id': {
+	// '/fuck/:id': {
 		//called when route ends
-		afterRoute: function(ctx, next) {
-			ctx.body = 'shit api 0.1, params=' + JSON.stringify(this.params);
-		},
-		method: 'get'
-	}
+		// afterRoute: function(ctx, next, response) {
+		// 	ctx.body = 'shit api 0.1, params=' + JSON.stringify(this.params) + response.body;
+		// },
+		// method: 'get'
+	// }
 }
 
 var micro = new Micro({
@@ -42,9 +42,9 @@ var micro = new Micro({
 			},
 
 			//called when route not found
-			routeNotFound: function(ctx, next, error) {
+			// routeNotFound: function(ctx, next, error) {
 
-			}
+			// }
 		}
 	},
 

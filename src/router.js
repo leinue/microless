@@ -4,7 +4,11 @@ const logging = require('./utils/logging.js');
 const handleDockerRequest = function(ctx, next, service) {
 	return new Promise((resolve, reject) => {
 
-		const url = (service.host || 'http://localhost') + ':' + service.hostPort || 'http://localhost:' + service.hostPort
+		let url = (service.host || 'http://localhost') + ':' + service.hostPort || 'http://localhost:' + service.hostPort
+
+		url = url + ctx.originalUrl;
+
+		console.log(url);
 
 		var options = {
 		  url: url,
@@ -57,7 +61,6 @@ var route = function (opts) {
 							response: opts.response
 						});
 					}else {
-						console.log(opts.response.headers);
 						ctx.body = opts.body;
 					}
 
@@ -136,7 +139,23 @@ var route = function (opts) {
 			if(modem.routeNotFound) {
 				modem.routeNotFound.call(this, ctx, next)
 			}else {
-				ctx.body = '[micro error]: ' + ctx.originalUrl + ' not found';
+
+				return handleDockerRequest.call(ctx, ctx, next, service)
+				.then((opts) => {
+					ctx.set(opts.response.headers);
+					ctx.body = opts.body;
+				})
+				.catch((error) => {
+					if(modem.onError) {
+						modem.onError.call(ctx, ctx, next, error);
+					}else {
+						ctx.body = error;
+					}
+
+					ctx.body = error;
+				});
+
+				// ctx.body = '[micro error]: ' + ctx.originalUrl + ' not found';
 			}
 		}
 

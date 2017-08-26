@@ -4,7 +4,7 @@ services:
     image: 'example_web'
     build: .
     deploy:
-      replicas: 5
+      replicas: 2
       restart_policy:
         condition: on-failure
     ports:

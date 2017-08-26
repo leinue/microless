@@ -139,7 +139,7 @@ var route = function (opts) {
 			if(modem.routeNotFound) {
 				modem.routeNotFound.call(this, ctx, next)
 			}else {
-
+				//未检测到路由配置时调用，自动路由
 				return handleDockerRequest.call(ctx, ctx, next, service)
 				.then((opts) => {
 					ctx.set(opts.response.headers);
@@ -154,8 +154,6 @@ var route = function (opts) {
 
 					ctx.body = error;
 				});
-
-				// ctx.body = '[micro error]: ' + ctx.originalUrl + ' not found';
 			}
 		}
 

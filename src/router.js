@@ -8,12 +8,14 @@ const handleDockerRequest = function(ctx, next, service) {
 
 		url = url + ctx.originalUrl;
 
-		console.log(url);
+		logging('request body:', ctx.method, ctx.request.body);
 
 		var options = {
 		  url: url,
 		  method: ctx.method,
-		  headers: ctx.header
+		  // headers: ctx.header,
+		  body: ctx.request.body,
+		  json: true
 		};
 
 		function callback(error, response, body) {
@@ -54,6 +56,8 @@ var route = function (opts) {
 				return handleDockerRequest.call(ctx, ctx, next, service)
 				.then((opts) => {
 					ctx.set(opts.response.headers);
+
+					console.log(opts);
 					
 					if(this.currentRequestConfig.afterRoute) {
 						this.currentRequestConfig.afterRoute.call(ctx, ctx, next, {
@@ -66,6 +70,9 @@ var route = function (opts) {
 
 				})
 				.catch((error) => {
+
+					console.log(error);
+
 					if(modem.onError) {
 						modem.onError.call(ctx, ctx, next, error);
 					}else {

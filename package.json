@@ -1,6 +1,6 @@
 {
   "name": "microless",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Serverless & Microservice framework",
   "main": "index.js",
   "scripts": {
